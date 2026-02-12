@@ -228,14 +228,23 @@ async def scrape_async(
             # Export data
             from ..services.exporter import ExportService
             exporter = ExportService()
+
+            export_result = {
+                'username': result.get('username'),
+                'profile': result['profile'].dict() if hasattr(result['profile'], 'dict') else result['profile'],
+                'repositories': result.get('repositories', []),
+                'total_stars': result.get('total_stars', 0),
+                'total_forks': result.get('total_forks', 0),
+                'top_languages': result.get('top_languages', {})
+            }
             
             export_files = []
             if request.export_format.value in ['excel', 'both']:
-                file_path = await exporter.export_to_excel(job_id, result)
+                file_path = await exporter.export_to_excel(job_id, export_result)
                 export_files.append(str(file_path))
             
             if request.export_format.value in ['csv', 'both']:
-                files = await exporter.export_to_csv(job_id, result)
+                files = await exporter.export_to_csv(job_id, export_result)
                 export_files.extend([str(f) for f in files])
             
             # Update job with results
@@ -243,7 +252,7 @@ async def scrape_async(
                 job_id,
                 status=JobStatus.COMPLETED,
                 progress=100,
-                result=result,
+                result=export_result,
                 export_files=export_files
             )
             
