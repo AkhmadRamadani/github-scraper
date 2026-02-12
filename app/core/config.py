@@ -64,9 +64,6 @@ class Settings(BaseSettings):
     MAX_PAGE_SIZE: int = 100
     DEFAULT_PAGE_SIZE: int = 20
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
 
 
 settings = Settings()
