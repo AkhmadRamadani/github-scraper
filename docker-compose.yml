@@ -12,19 +12,6 @@ services:
     volumes:
       - ./data:/app/data
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.rule=Host(gscraper.ramashook.my.id)"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.entrypoints=websecure"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.tls=true"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.ituan-dah-githubscraper-6ntpwc-48-web.loadbalancer.server.port=8000"
 
   # Optional: Add nginx reverse proxy
   # nginx:
