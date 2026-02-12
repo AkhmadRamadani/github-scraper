@@ -1,39 +1,17 @@
 version: '3.8'
 
 services:
-  api:
+  scrapper:
     build: .
-    container_name: github-scraper-api
-    environment:
-      - DEBUG=False
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - HOST=0.0.0.0
-      - PORT=8000
+    ports:
+     - "8000:8000"
+    env_file:
+      - ./.env
     volumes:
       - ./data:/app/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]  
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.rule=Host(gscraper.ramashook.my.id)"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.entrypoints=websecure"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.tls=true"
-      - "traefik.http.routers.ituan-dah-githubscraper-6ntpwc-48-web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.ituan-dah-githubscraper-6ntpwc-48-web.loadbalancer.server.port=8000"
-
-  # Optional: Add nginx reverse proxy
-  # nginx:
-  #   image: nginx:alpine
-  #   container_name: github-scraper-nginx
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #   depends_on:
-  #     - api
-  #   restart: unless-stopped
