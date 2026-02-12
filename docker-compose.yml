@@ -4,8 +4,6 @@ services:
   api:
     build: .
     container_name: github-scraper-api
-    ports:
-      - "8123:8000"
     environment:
       - DEBUG=False
       - GITHUB_TOKEN=${GITHUB_TOKEN}
