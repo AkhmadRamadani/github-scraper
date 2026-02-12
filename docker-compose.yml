@@ -18,6 +18,13 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.actual_budget.rule=Host(gscraper.ramashook.my.id)"
+      - "traefik.http.routers.actual_budget.entrypoints=websecure"
+      - "traefik.http.routers.actual_budget.tls=true"
+      - "traefik.http.routers.actual_budget.tls.certresolver=letsencrypt"
+      - "traefik.http.services.actual_budget.loadbalancer.server.port=8000"
 
   # Optional: Add nginx reverse proxy
   # nginx:
