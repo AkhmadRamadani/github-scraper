@@ -2,7 +2,7 @@
 Application configuration settings
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 from pathlib import Path
 from typing import List
@@ -11,6 +11,11 @@ import os
 
 class Settings(BaseSettings):
     """Application settings"""
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore"
+    )
+
     
     # API Settings
     APP_NAME: str = "GitHub Scraper API"
@@ -59,9 +64,6 @@ class Settings(BaseSettings):
     MAX_PAGE_SIZE: int = 100
     DEFAULT_PAGE_SIZE: int = 20
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
 
 
 settings = Settings()
